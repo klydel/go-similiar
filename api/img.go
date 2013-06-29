@@ -8,8 +8,8 @@ import (
 	"appengine/urlfetch"
 	"encoding/json"
 	"fmt"
-	"go-similiar/img"
-	"go-similiar/util"
+	"img"
+	"util"
 	"net/http"
 )
 
@@ -98,13 +98,15 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 
 func Post(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
+	c.Infof("INSIDE POST")
 	url := r.FormValue("url")
+
+	c.Infof("Requested URL: %v", url)
 	i, err := img.Fetch(url, urlfetch.Client(c))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 	dao := ImgDAO{Context: c}
 	if err := dao.Put(url, i); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -124,7 +126,7 @@ func Put(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				return err
 			}
-
+			c.Infof("REPOST: %v", ok)
 			if ok {
 				*code = http.StatusNotModified
 				return nil

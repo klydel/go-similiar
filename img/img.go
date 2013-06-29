@@ -3,7 +3,7 @@
 package img
 
 import(
-	"go-similiar/util"
+	"util"
 	"errors"
 	"image"
 	"image/color"
